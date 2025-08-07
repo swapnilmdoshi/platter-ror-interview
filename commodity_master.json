@@ -1,0 +1,23 @@
+{
+    "milk": {
+      "unit_price": 3.97,
+      "offer": {
+        "minimum_quantity": 2,
+        "price": 5.00
+      }
+    },
+    "bread": {
+      "unit_price": 2.17,
+      "offer": {
+        "minimum_quantity": 3,
+        "price": 6.00
+      }
+    },
+    "banana": {
+      "unit_price": 0.99
+    },
+    "apple": {
+      "unit_price": 0.89
+    }
+  }
+  

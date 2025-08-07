@@ -1,5 +1,4 @@
 require 'json'
-require 'pry'
 
 class PriceCalculator
   def initialize
@@ -10,6 +9,16 @@ class PriceCalculator
     @bill_total = 0.00
     @bill_total_without_offer = 0.00
   end
+
+  def generate_bill
+    get_user_input
+    fetch_items
+    count_items
+    calculate_total
+    print_bill
+  end
+
+  private
 
   def get_user_input
     puts 'Please enter all the items purchased separated by a comma'
@@ -55,6 +64,7 @@ class PriceCalculator
   end
  
   def print_bill
+    puts ""
     puts("Items".ljust(25) + "Quantity".ljust(15) + "Price".ljust(15))
     puts "_" * 55
 
@@ -62,15 +72,16 @@ class PriceCalculator
       puts  item_name.ljust(25) + details['quantity'].to_s.ljust(15) + "$" +details['total_price'].to_s.ljust(15)
     end
 
+    puts ""
     puts "Total price: $" + @bill_total.to_s
     puts "You saved $" + ((@bill_total_without_offer - @bill_total).round(2)).to_s
   end
 end
 
-calculator = PriceCalculator.new
+# This programs considers 
+# Offer applies only once per purchase. For example, if 5 milk packets 
+# are bought and the offer is on 2 packets, only those 2 will be at the
+# offer price — the rest will be charged at the regular unit price.
 
-calculator.get_user_input
-calculator.fetch_items
-calculator.count_items
-calculator.calculate_total
-calculator.print_bill
+calculator = PriceCalculator.new
+calculator.generate_bill

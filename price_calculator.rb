@@ -7,7 +7,7 @@ class PriceCalculator
     @commodity_master = JSON.parse(file_content)        
     @item_count = {}
     @bill = Hash.new {|attribute,value| attribute[value] = Hash.new(0)}
-    @total_price = nil
+    @bill_total = 0.00
   end
 
   def get_user_input
@@ -33,6 +33,7 @@ class PriceCalculator
 
       offer_min_quantity = nil
       offer_price = nil
+      line_item_total = nil
 
       if offer
         offer_min_quantity, offer_price = offer.values_at('minimum_quantity', 'price')
@@ -42,12 +43,14 @@ class PriceCalculator
         applicable_quantity = offer_min_quantity
         remaining_quantity = item_quantity - offer_min_quantity
                   
-        @bill[item]['quantity'] = item_quantity
-        @bill[item]['total_price'] = offer_price + (remaining_quantity * unit_price)
-      else
-        @bill[item]['quantity'] = item_quantity
-        @bill[item]['total_price'] = unit_price * item_quantity
+        line_item_total = offer_price + (remaining_quantity * unit_price)                
+      else              
+        line_item_total = unit_price * item_quantity      
       end
+      
+      @bill[item]['quantity'] = item_quantity
+      @bill[item]['total_price'] = line_item_total
+      @bill_total += line_item_total
     end      
   end
  
@@ -56,8 +59,10 @@ class PriceCalculator
     puts "_" * 55
 
     @bill.each do| item_name, details|
-      puts  item_name.ljust(25) + details['quantity'].to_s.ljust(15) + details['total_price'].to_s.ljust(15)
+      puts  item_name.ljust(25) + details['quantity'].to_s.ljust(15) + "$" +details['total_price'].to_s.ljust(15)
     end
+
+    puts "Total price: $" + @bill_total.to_s
   end
 end
 

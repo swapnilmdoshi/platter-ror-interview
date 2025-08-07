@@ -8,6 +8,7 @@ class PriceCalculator
     @item_count = {}
     @bill = Hash.new {|attribute,value| attribute[value] = Hash.new(0)}
     @bill_total = 0.00
+    @bill_total_without_offer = 0.00
   end
 
   def get_user_input
@@ -23,9 +24,7 @@ class PriceCalculator
     @item_count = @purchased_items.tally
   end
 
-  def calculate_total
-    @item_count
-
+  def calculate_total    
     @item_count.each do |item, item_quantity|
       valid_commodity = @commodity_master.fetch(item, nil)
       unit_price = valid_commodity.fetch('unit_price',nil)
@@ -51,6 +50,7 @@ class PriceCalculator
       @bill[item]['quantity'] = item_quantity
       @bill[item]['total_price'] = line_item_total
       @bill_total += line_item_total
+      @bill_total_without_offer += unit_price * item_quantity
     end      
   end
  
@@ -63,6 +63,7 @@ class PriceCalculator
     end
 
     puts "Total price: $" + @bill_total.to_s
+    puts "You saved $" + ((@bill_total_without_offer - @bill_total).round(2)).to_s
   end
 end
 
